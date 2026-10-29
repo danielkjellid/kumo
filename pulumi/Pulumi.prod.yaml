@@ -1,0 +1,25 @@
+config:
+  hcloud:token:
+    secure: AAABAA1A644rM9yBd4O0/4FxsITITJXmQTOaUqgBpjXMmkHLEO3wru8NfxwRE7/EtnCXu7KbNf2QmRx36JIVcLn0GiwRJVYoqsbxKcUenR//ZQ8fhNPcxGjAvgbsFnUW
+  kumo:authorizedKeys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAgEuW7XYVefo1XI2Eco7j7Wg/qOhcSo2K0WjobxPzWG daniel.kjellid@gmail.com
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBp0/wmOHFUHSwhRgPl79A5qgKJAaqH6Viv/qILiCEpF github-deploy
+  kumo:serverType: cx23
+  kumo:bucket: kjellid
+  kumo:s3AccessKey:
+    secure: AAABAHSwVtWasnxhm9GrUyTU4KYdHA2nLPvuY80j+gCOdt75iGZG1gKzk50M6/XgAr77hg==
+  kumo:s3SecretKey:
+    secure: AAABAOciVae5N5ztc+MQMSwGC0T7b9TQTPRDXZKDOwgKlwH0EOvyW4rsrCnuSchrIQWnnSCCB2aXIQr+oduLTKdktE63g2Lq
+  kumo:domain: kjellid.no
+  kumo:ghcrUser: danielkjellid
+  kumo:ghcrToken:
+    secure: AAABAGi4L/C/ci8Q6HgTEDNs02ubbwTq1hqS/aTTOQ2ME3r4oVCFzDQUp2jV0tzW3B0HWgqRxVx+1eNUA7pZuImzjfGxH5o2
+  kumo:env:
+    cadence:
+      SECRET_KEY:
+        secure: AAABAJiFWIbTThr+Zx740T8EA9HEZu/YL9edRJPhc9jDDuHCHa5ebgRY9r1mVDylX4nTT4Ldjru5d9drbszT0Ii7jbDulUJmHOeOdGXklxct9Q==
+      DEBUG: 0
+    gatekeeper:
+      SECRET_KEY:
+        secure: AAABAMkt9qPljwt/btKysVR4b5Px84kiOLtchIsCIMysFTv/FME+s0rcAojEoHPhYhi6JLl9/DNrrKHG/GdM9tEJtiMoQB3snqOzsOIcoIh9OA==
+      DEBUG: 0

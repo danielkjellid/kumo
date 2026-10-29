@@ -1,0 +1,6 @@
+name: kumo
+description: The Hetzner server every side project runs on.
+runtime:
+  name: python
+  options:
+    toolchain: uv

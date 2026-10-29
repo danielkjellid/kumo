@@ -1,0 +1,73 @@
+# One box, one SQLite file per app under /data/sqlite, all of them backed up
+# by a single Litestream container. Apps know nothing about backups.
+#
+# Order on a fresh box: restore pulls any database missing from the bucket,
+# then litestream and the apps start. Every step is safe to rerun.
+
+x-litestream: &litestream
+  image: litestream/litestream:0.5
+  env_file: env/litestream.env
+  volumes:
+    - ./litestream.yml:/etc/litestream.yml:ro
+    - /data/sqlite:/data/sqlite
+
+x-app: &app
+  restart: unless-stopped
+  volumes:
+    - /data/sqlite:/data/sqlite
+  depends_on:
+    restore:
+      condition: service_completed_successfully
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      - DOMAIN
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+  restore:
+    <<: *litestream
+    entrypoint: /bin/sh -c
+    command: >
+      "for db in cadence gatekeeper; do
+         litestream restore -if-db-not-exists -if-replica-exists /data/sqlite/$$db.db || exit 1;
+       done"
+
+  litestream:
+    <<: *litestream
+    restart: unless-stopped
+    command: replicate
+    depends_on:
+      restore:
+        condition: service_completed_successfully
+
+  cadence:
+    <<: *app
+    image: ghcr.io/danielkjellid/cadence:latest
+    env_file: env/cadence.env
+    environment:
+      SQLITE_PATH: /data/sqlite/cadence.db
+      ALLOWED_HOSTS: cadence.${DOMAIN}
+      CSRF_TRUSTED_ORIGINS: https://cadence.${DOMAIN}
+
+  gatekeeper:
+    <<: *app
+    image: ghcr.io/danielkjellid/gatekeeper:latest
+    env_file: env/gatekeeper.env
+    environment:
+      DATABASE_PATH: /data/sqlite/gatekeeper.db
+      ALLOWED_HOSTS: gatekeeper.${DOMAIN}
+      CSRF_TRUSTED_ORIGINS: https://gatekeeper.${DOMAIN}
+
+volumes:
+  caddy_data:
+  caddy_config:

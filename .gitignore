@@ -1,0 +1,5 @@
+.env
+env/*.env
+pulumi/.venv/
+__pycache__/
+deploy.log

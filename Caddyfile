@@ -1,0 +1,7 @@
+cadence.{$DOMAIN} {
+	reverse_proxy cadence:8000
+}
+
+gatekeeper.{$DOMAIN} {
+	reverse_proxy gatekeeper:8000
+}

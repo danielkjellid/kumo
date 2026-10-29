@@ -1,0 +1,28 @@
+#cloud-config
+# First boot only. Everything after this is compose.yml and bin/deploy.sh.
+package_update: true
+package_upgrade: true
+packages:
+  - unattended-upgrades
+  - ca-certificates
+  - curl
+  - rsync
+
+ssh_pwauth: false
+
+groups:
+  - docker
+
+users:
+  - name: deploy
+    groups: [docker, sudo]
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys: AUTHORIZED_KEYS
+
+runcmd:
+  - curl -fsSL https://get.docker.com | sh
+  - mkdir -p /srv/infra /data/sqlite
+  - chown -R deploy:deploy /srv/infra /data
+  # Picks up new images without CI having to talk to the box.
+  - echo '*/5 * * * * deploy test -x /srv/infra/bin/deploy.sh && /srv/infra/bin/deploy.sh >> /srv/infra/deploy.log 2>&1' > /etc/cron.d/deploy

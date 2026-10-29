@@ -1,0 +1,24 @@
+# Every SQLite database on the box, replicated to one bucket. Adding a
+# project means adding its database here and in compose.yml.
+snapshot:
+  interval: 24h
+  retention: 720h
+
+dbs:
+  - path: /data/sqlite/cadence.db
+    replica:
+      type: s3
+      bucket: ${LITESTREAM_BUCKET}
+      path: cadence
+      endpoint: ${LITESTREAM_ENDPOINT}
+      region: ${LITESTREAM_REGION}
+      force-path-style: true
+
+  - path: /data/sqlite/gatekeeper.db
+    replica:
+      type: s3
+      bucket: ${LITESTREAM_BUCKET}
+      path: gatekeeper
+      endpoint: ${LITESTREAM_ENDPOINT}
+      region: ${LITESTREAM_REGION}
+      force-path-style: true
