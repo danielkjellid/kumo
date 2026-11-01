@@ -23,3 +23,20 @@ config:
       SECRET_KEY:
         secure: AAABAMkt9qPljwt/btKysVR4b5Px84kiOLtchIsCIMysFTv/FME+s0rcAojEoHPhYhi6JLl9/DNrrKHG/GdM9tEJtiMoQB3snqOzsOIcoIh9OA==
       DEBUG: 0
+    auth:
+      GOOGLE_CLIENT_ID: 623346269284-qkfspjnrdtsfmpm31kk1tkquqjrt8phg.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET:
+        secure: AAABAIKOVScl3Y02qPhi6V2Y7pdBxY2IeKbEE2rWC0R+0GvL4rP5y2m9uo7mfEvduXuKqWXQJ1u8yspGxFXHdiE98w==
+      MICROSOFT_CLIENT_ID: 0
+      MICROSOFT_CLIENT_SECRET:
+        secure: AAABAC76nagLQ5AUwg35wwgL0p8NzZlAVU9MzXq2ady2YSnYN/RsupdnPTNrxifYz0lT2KARCTzFAX6IR4X8lPsfs0tH2PJk
+      OAUTH2_PROXY_CLIENT_SECRET:
+        secure: AAABACf7TZkEePmfZS77CpFGddS9SVXLa/rrEJXlkxbtBLHR+v7UaqkzN+LwX+YpPYql8w+sNnyTkepsq+0H0QGgsoJlAHR5I2h9zpEPtIkl1Joz4odKvgmX3bl+uBMI
+      OAUTH2_PROXY_COOKIE_SECRET:
+        secure: AAABAA0OO/o0nJiGOlMODkBvPoBdNH+IT6NpBJEhJHJfShp1pF4kI0UFJgphFBoerzDHFCMOS+wopglFcLj4kybF5B4TUUHiDL4zxw==
+  kumo:access:
+    cadence:
+      - daniel.kjellid@gmail.com
+    gatekeeper:
+      - daniel.kjellid@gmail.com
+  kumo:location: hel1

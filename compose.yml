@@ -30,9 +30,50 @@ services:
     environment:
       - DOMAIN
     volumes:
+      # Written by Pulumi (src/pulumi/caddy.py), like dex.json below.
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+
+  # Sign-in in front of every app. Dex offers Google and Microsoft, oauth2-proxy
+  # keeps the session and Caddy asks it on every request. The cookie is set on
+  # .DOMAIN, so one sign-in covers every subdomain.
+  dex:
+    image: ghcr.io/dexidp/dex:v2.46.1
+    restart: unless-stopped
+    env_file: env/auth.env
+    command: dex serve /etc/dex/config.json
+    volumes:
+      - ./dex.json:/etc/dex/config.json:ro
+
+  auth:
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.5
+    restart: unless-stopped
+    env_file: env/auth.env
+    environment:
+      OAUTH2_PROXY_PROVIDER: oidc
+      OAUTH2_PROXY_CLIENT_ID: oauth2-proxy
+      OAUTH2_PROXY_OIDC_ISSUER_URL: https://auth.${DOMAIN}/dex
+      # Reach Dex inside the compose network instead of out and back in.
+      OAUTH2_PROXY_SKIP_OIDC_DISCOVERY: "true"
+      OAUTH2_PROXY_LOGIN_URL: https://auth.${DOMAIN}/dex/auth
+      OAUTH2_PROXY_REDEEM_URL: http://dex:5556/dex/token
+      OAUTH2_PROXY_OIDC_JWKS_URL: http://dex:5556/dex/keys
+      OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:4180
+      OAUTH2_PROXY_REVERSE_PROXY: "true"
+      OAUTH2_PROXY_UPSTREAMS: static://202
+      OAUTH2_PROXY_REDIRECT_URL: https://auth.${DOMAIN}/oauth2/callback
+      OAUTH2_PROXY_COOKIE_DOMAINS: .${DOMAIN}
+      OAUTH2_PROXY_WHITELIST_DOMAINS: .${DOMAIN}
+      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: "true"
+      # The default, "force", makes Dex show its approval screen on every login.
+      OAUTH2_PROXY_APPROVAL_PROMPT: auto
+      # Who may sign in at all; the Caddyfile narrows it per app. Never add
+      # email domains next to it: oauth2-proxy lets in anyone matching either,
+      # and "*" matches everyone.
+      OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE: /etc/oauth2-proxy/allowed-emails
+    volumes:
+      - ./env/allowed-emails:/etc/oauth2-proxy/allowed-emails:ro
 
   restore:
     <<: *litestream

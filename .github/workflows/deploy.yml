@@ -17,5 +17,5 @@ jobs:
           ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
       - name: Copy config and converge
         run: |
-          rsync -az compose.yml Caddyfile litestream.yml bin "deploy@${{ secrets.DEPLOY_HOST }}:/srv/infra/"
+          rsync -az compose.yml litestream.yml bin "deploy@${{ secrets.DEPLOY_HOST }}:/srv/infra/"
           ssh "deploy@${{ secrets.DEPLOY_HOST }}" /srv/infra/bin/deploy.sh

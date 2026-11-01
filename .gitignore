@@ -1,5 +1,5 @@
 .env
 env/*.env
-pulumi/.venv/
+.venv/
 __pycache__/
 deploy.log

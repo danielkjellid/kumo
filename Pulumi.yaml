@@ -1,5 +1,6 @@
 name: kumo
 description: The Hetzner server every side project runs on.
+main: src/pulumi
 runtime:
   name: python
   options:
