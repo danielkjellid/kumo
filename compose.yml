@@ -73,7 +73,7 @@ services:
       # and "*" matches everyone.
       OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE: /etc/oauth2-proxy/allowed-emails
     volumes:
-      - ./env/allowed-emails:/etc/oauth2-proxy/allowed-emails:ro
+      - ./allowed-emails:/etc/oauth2-proxy/allowed-emails:ro
 
   restore:
     <<: *litestream

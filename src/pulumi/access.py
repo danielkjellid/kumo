@@ -5,4 +5,5 @@ from settings import config
 # caddy.py narrows it per app.
 access: dict[str, list[str]] = config.require_object("access")
 everyone = sorted({email for emails in access.values() for email in emails})
-write_file("allowed-emails", "/srv/infra/env/allowed-emails", "".join(f"{email}\n" for email in everyone))
+# Not secret, and oauth2-proxy runs as a user that cannot read env/.
+write_file("allowed-emails", "/srv/infra/allowed-emails", "".join(f"{email}\n" for email in everyone), private=False)

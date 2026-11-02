@@ -40,4 +40,5 @@ def if_running(service: str, command: str) -> str:
 
 
 def render(values: dict[str, str]) -> str:
-    return "".join(f"{key}={value}\n" for key, value in values.items())
+    # Compose expands $VAR inside env_file values; $$ is a literal $.
+    return "".join(f"{key}={str(value).replace('$', '$$')}\n" for key, value in values.items())
