@@ -44,7 +44,7 @@ def init(stack_name: str, skip_set: bool) -> None:
         answer = click.prompt("Emails with access to every app, comma separated")
         everyone = emails(tuple(email.strip() for email in answer.split(",")))
         for app in APPS:
-            config.set_list(f"access.{app}", everyone)
+            config.set_list(f"access.{app}", everyone, secret=True)
 
     config.save()
     if left := missing(config):

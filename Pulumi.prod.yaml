@@ -34,9 +34,5 @@ config:
         secure: AAABACf7TZkEePmfZS77CpFGddS9SVXLa/rrEJXlkxbtBLHR+v7UaqkzN+LwX+YpPYql8w+sNnyTkepsq+0H0QGgsoJlAHR5I2h9zpEPtIkl1Joz4odKvgmX3bl+uBMI
       OAUTH2_PROXY_COOKIE_SECRET:
         secure: AAABAA0OO/o0nJiGOlMODkBvPoBdNH+IT6NpBJEhJHJfShp1pF4kI0UFJgphFBoerzDHFCMOS+wopglFcLj4kybF5B4TUUHiDL4zxw==
-  kumo:access:
-    cadence:
-      - daniel.kjellid@gmail.com
-    gatekeeper:
-      - daniel.kjellid@gmail.com
+  kumo:access: {cadence: [{secure: AAABAAfzUb22NPr6voVJF6uIiaMOa8yiIP0hRmNqwuHCfklyHI1tQCD1dAeBM2f++dfIYsm2ZlU=}, {secure: AAABABAJgcGOAzp0J3vq1sC16SIThUB5BrBmI9/LCHELRYDrv71or/KQPSZ52e9bLBPw}], gatekeeper: [{secure: AAABAGs9Niczvv+ecSlQJ5hRpuY61FgtSE8VlpBmkaiDmp1sB72JXZn1ZGTZ4qhplPBgNs4iM6U=}]}
   kumo:location: hel1

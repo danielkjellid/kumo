@@ -41,11 +41,11 @@ class Config:
         if self.get(path) is not None:
             self.stack.remove_config(path, path=True)
 
-    def set_list(self, path: str, items: list[str]) -> None:
+    def set_list(self, path: str, items: list[str], secret: bool = False) -> None:
         # Pulumi sets lists one index at a time, so clear the old one first.
         self.remove(path)
         for i, item in enumerate(items):
-            self.staged[f"{path}[{i}]"] = auto.ConfigValue(value=item)
+            self.staged[f"{path}[{i}]"] = auto.ConfigValue(value=item, secret=secret)
 
     def save(self) -> None:
         if self.staged:

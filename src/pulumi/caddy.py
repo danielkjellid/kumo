@@ -40,18 +40,20 @@ auth.{$DOMAIN} {
 """
 
 
-def site(app: str) -> str:
+def site(app: str, allowed: list[str]) -> str:
     # oauth2-proxy reads an empty list as "anyone signed in", so an app nobody
     # was given gets a list that matches no one.
-    emails = ",".join(quote(email, safe="@") for email in access.get(app, [])) or "nobody"
+    emails = ",".join(quote(email, safe="@") for email in allowed) or "nobody"
     return f"\n{app}.{{$DOMAIN}} {{\n\timport login {emails}\n\treverse_proxy {app}:8000\n}}\n"
 
 
 write_file(
     "caddyfile",
     "/srv/infra/Caddyfile",
-    BASE.replace("DENIED", (Path(__file__).parent / "denied.html").read_text().strip())
-    + "".join(site(app) for app in APPS),
+    access.apply(
+        lambda lists: BASE.replace("DENIED", (Path(__file__).parent / "denied.html").read_text().strip())
+        + "".join(site(app, lists.get(app, [])) for app in APPS)
+    ),
     private=False,
     then=if_running("caddy", "exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile"),
 )

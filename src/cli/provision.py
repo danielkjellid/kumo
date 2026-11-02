@@ -36,7 +36,8 @@ def provision_add(stack_name: str, app: str, email: tuple[str, ...]) -> None:
     """Give EMAIL access to APP."""
     config = load(stack_name)
     current = config.get(f"access.{app}") or []
-    config.set_list(f"access.{app}", current + [e for e in emails(email) if e not in current])
+    # Encrypted, so the emails stay out of the public repo.
+    config.set_list(f"access.{app}", current + [e for e in emails(email) if e not in current], secret=True)
     config.save()
 
 
@@ -51,5 +52,5 @@ def provision_remove(stack_name: str, app: str, email: tuple[str, ...]) -> None:
     missing = [e for e in email if e not in current]
     if missing:
         raise click.ClickException(f"Not on {app}'s list: {', '.join(missing)}")
-    config.set_list(f"access.{app}", [e for e in current if e not in email])
+    config.set_list(f"access.{app}", [e for e in current if e not in email], secret=True)
     config.save()
