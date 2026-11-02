@@ -79,7 +79,7 @@ services:
     <<: *litestream
     entrypoint: /bin/sh -c
     command: >
-      "for db in cadence gatekeeper; do
+      "for db in cadence; do
          litestream restore -if-db-not-exists -if-replica-exists /data/sqlite/$$db.db || exit 1;
        done"
 
@@ -99,15 +99,6 @@ services:
       SQLITE_PATH: /data/sqlite/cadence.db
       ALLOWED_HOSTS: cadence.${DOMAIN}
       CSRF_TRUSTED_ORIGINS: https://cadence.${DOMAIN}
-
-  gatekeeper:
-    <<: *app
-    image: ghcr.io/danielkjellid/gatekeeper:latest
-    env_file: env/gatekeeper.env
-    environment:
-      DATABASE_PATH: /data/sqlite/gatekeeper.db
-      ALLOWED_HOSTS: gatekeeper.${DOMAIN}
-      CSRF_TRUSTED_ORIGINS: https://gatekeeper.${DOMAIN}
 
 volumes:
   caddy_data:
