@@ -30,6 +30,7 @@ clone.
 | `kumo provision list\|add\|remove` | Who may open which app, by email. |
 | `kumo env list\|set\|unset` | Each app's environment variables. |
 | `kumo secret list\|set` | Tokens and keys. Generated ones get a new random value. |
+| `kumo describe <app>` | URL, access, env keys, container state, running commit and database size. |
 | `kumo deploy [app]` | Pull new images and restart now, instead of waiting for cron. |
 | `kumo ssh`, `status`, `logs` | A shell, `docker compose ps` or the logs on the box. |
 

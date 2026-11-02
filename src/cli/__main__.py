@@ -5,6 +5,7 @@ from pulumi import automation as auto
 
 from .box import deploy, logs, ssh, status
 from .commit import commit
+from .describe import describe
 from .env import env
 from .init import init
 from .provision import provision
@@ -19,7 +20,7 @@ def cli(ctx: click.Context, stack: str) -> None:
     ctx.obj = stack
 
 
-for command in [init, commit, provision, env, secret, deploy, ssh, status, logs]:
+for command in [init, commit, provision, env, secret, describe, deploy, ssh, status, logs]:
     cli.add_command(command)
 
 

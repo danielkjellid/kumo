@@ -6,12 +6,15 @@ from .apps import APPS
 from .stack import open_stack
 
 
-def on_box(stack_name: str, command: str | None = None) -> None:
+def ssh_args(stack_name: str, *options: str) -> list[str]:
     ip = open_stack(stack_name).outputs()["ipv4"].value
     # Trust the box's host key on first contact, without a prompt that needs a
     # terminal, and still refuse if it changes later.
-    ssh = ["ssh", "-t", "-o", "StrictHostKeyChecking=accept-new", f"deploy@{ip}"]
-    os.execvp("ssh", ssh + ([f"cd /srv/infra && {command}"] if command else []))
+    return ["ssh", *options, "-o", "StrictHostKeyChecking=accept-new", f"deploy@{ip}"]
+
+
+def on_box(stack_name: str, command: str | None = None) -> None:
+    os.execvp("ssh", ssh_args(stack_name, "-t") + ([f"cd /srv/infra && {command}"] if command else []))
 
 
 @click.command()
