@@ -73,6 +73,8 @@ services:
       # email domains next to it: oauth2-proxy lets in anyone matching either,
       # and "*" matches everyone.
       OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE: /etc/oauth2-proxy/allowed-emails
+      # Caddy copies the signed-in email from the auth reply to the app.
+      OAUTH2_PROXY_SET_XAUTHREQUEST: "true"
     volumes:
       - ./allowed-emails:/etc/oauth2-proxy/allowed-emails:ro
 
@@ -100,6 +102,9 @@ services:
       SQLITE_PATH: /data/sqlite/cadence.db
       ALLOWED_HOSTS: cadence.${DOMAIN}
       CSRF_TRUSTED_ORIGINS: https://cadence.${DOMAIN}
+      # Logging out of Cadence must end the proxy session too, or the next
+      # request signs the user straight back in.
+      LOGOUT_REDIRECT_URL: https://auth.${DOMAIN}/oauth2/sign_out?rd=https://cadence.${DOMAIN}/
 
 volumes:
   caddy_data:

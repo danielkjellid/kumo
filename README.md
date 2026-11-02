@@ -79,7 +79,9 @@ this app." An app with no list lets no one in.
 ## Adding a project
 
 The project needs a Dockerfile that runs migrations and serves on port 8000,
-and a copy of `image.yml` from cadence or gatekeeper. Then, here:
+and a copy of `image.yml` from cadence or gatekeeper. Every request that
+reaches the app carries the signed-in account in `X-Auth-Request-Email`,
+which only Caddy can set, so the app may trust it. Then, here:
 
 1. A service in `compose.yml`, copied from an existing one. For a SQLite app,
    point its database at `/data/sqlite/<name>.db`.

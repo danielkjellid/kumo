@@ -11,6 +11,8 @@ BASE = """\
 	forward_auth auth:4180 {
 		uri /oauth2/auth?allowed_emails={args[0]}
 		header_up X-Real-IP {remote_host}
+		# The signed-in account, for the app to trust. Only Caddy sets it.
+		copy_headers X-Auth-Request-Email
 		@login status 401
 		handle_response @login {
 			redir * https://auth.{$DOMAIN}/oauth2/start?rd={scheme}://{host}{uri}
