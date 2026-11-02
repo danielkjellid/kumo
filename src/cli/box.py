@@ -2,6 +2,7 @@ import os
 
 import click
 
+from .apps import APPS
 from .stack import open_stack
 
 
@@ -34,3 +35,17 @@ def status(stack_name: str) -> None:
 def logs(stack_name: str, service: str | None, follow: bool) -> None:
     """Show the last 200 log lines, of one service or all of them."""
     on_box(stack_name, f"docker compose logs --tail 200 {'-f ' if follow else ''}{service or ''}")
+
+
+@click.command()
+@click.argument("app", type=click.Choice(APPS), required=False)
+@click.pass_obj
+def deploy(stack_name: str, app: str | None) -> None:
+    """Pull new images and restart what changed, without waiting for cron.
+
+    With an app, only that one. If cron is already deploying, this waits for it.
+    """
+    if app is None:
+        return on_box(stack_name, "bin/deploy.sh")
+    # Same lock as deploy.sh, so this never races a cron run.
+    on_box(stack_name, f"flock -w 600 bin/deploy.sh sh -c 'docker compose pull {app} && docker compose up -d {app}'")
