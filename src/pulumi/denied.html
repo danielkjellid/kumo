@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>No access · kumo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://auth.{$DOMAIN}/dex/theme/styles.css" rel="stylesheet">
+<link rel="icon" href="https://auth.{$DOMAIN}/dex/theme/logo.svg">
+</head>
+<body>
+<main class="shell">
+  <div class="wordmark"><img src="https://auth.{$DOMAIN}/dex/theme/logo.svg" alt="" width="24" height="24">kumo</div>
+
+  <section class="head">
+    <span class="badge">
+      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2.5" y="5.5" width="7" height="5" rx="1"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5"/></svg>
+      403 Forbidden
+    </span>
+    <h1>You don’t have access to this app</h1>
+    <p class="sub">You signed in, but this account isn’t on the list for {host}. Ask the person who runs it to add you, or sign in with another account.</p>
+  </section>
+
+  <section aria-label="Details">
+    <dl class="details">
+      <div><dt>Status</dt><dd>403 Forbidden</dd></div>
+      <div><dt>App</dt><dd>{host}</dd></div>
+      <div><dt>Path</dt><dd>{path}</dd></div>
+    </dl>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://auth.{$DOMAIN}/oauth2/sign_out?rd={scheme}://{host}{uri}">Sign in with a different account</a>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>auth.{$DOMAIN}</span>
+    <span>Secured by Dex</span>
+  </footer>
+</main>
+</body>
+</html>

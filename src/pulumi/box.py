@@ -15,8 +15,8 @@ first_boot = command.remote.Command(
 )
 
 
-def run(name: str, create: str, stdin: pulumi.Input[str]) -> None:
-    command.remote.Command(
+def run(name: str, create: str, stdin: pulumi.Input[str]) -> command.remote.Command:
+    return command.remote.Command(
         name,
         connection=connection,
         create=create,
@@ -25,10 +25,12 @@ def run(name: str, create: str, stdin: pulumi.Input[str]) -> None:
     )
 
 
-def write_file(name: str, path: str, content: pulumi.Input[str], private: bool = True, then: str = "") -> None:
+def write_file(
+    name: str, path: str, content: pulumi.Input[str], private: bool = True, then: str = ""
+) -> command.remote.Command:
     """Write content to path on the box, then run `then` there, if given."""
     umask = "077" if private else "022"
-    run(name, f"umask {umask} && mkdir -p $(dirname {path}) && cat > {path}{' && ' + then if then else ''}", content)
+    return run(name, f"umask {umask} && mkdir -p $(dirname {path}) && cat > {path}{' && ' + then if then else ''}", content)
 
 
 def if_running(service: str, command: str) -> str:

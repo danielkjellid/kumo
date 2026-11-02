@@ -1,3 +1,4 @@
+from pathlib import Path
 from urllib.parse import quote
 
 from access import access
@@ -16,7 +17,10 @@ BASE = """\
 		}
 		@denied status 403
 		handle_response @denied {
-			respond "You don't have access to this app." 403
+			header Content-Type "text/html; charset=utf-8"
+			respond <<HTML
+DENIED
+HTML 403
 		}
 	}
 }
@@ -44,7 +48,8 @@ def site(app: str) -> str:
 write_file(
     "caddyfile",
     "/srv/infra/Caddyfile",
-    BASE + "".join(site(app) for app in APPS),
+    BASE.replace("DENIED", (Path(__file__).parent / "denied.html").read_text().strip())
+    + "".join(site(app) for app in APPS),
     private=False,
     then=if_running("caddy", "exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile"),
 )

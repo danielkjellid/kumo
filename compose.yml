@@ -45,6 +45,7 @@ services:
     command: dex serve /etc/dex/config.json
     volumes:
       - ./dex.json:/etc/dex/config.json:ro
+      - ./dex-web:/srv/dex/web:ro
 
   auth:
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.5

@@ -1,0 +1,39 @@
+{{ template "header.html" . }}
+
+  <section class="head">
+    <h1>Sign in</h1>
+    <p class="sub">Choose the account you use with {{ issuer }}.</p>
+  </section>
+
+  <section aria-label="Sign-in providers">
+    <ul class="providers" id="providers">
+      {{ range $c := .Connectors }}
+      <li><a class="provider" href="{{ $c.URL }}" data-name="{{ $c.Name }}">
+        <span class="mark"><img src="{{ url $.ReqPath (printf "static/img/%s-icon.svg" $c.Type) }}" alt="" width="20" height="20"></span>
+        <span class="label"><span class="name">{{ $c.Name }}</span><span class="proto">{{ if eq $c.Type "saml" }}SAML 2.0{{ else if eq $c.Type "oidc" }}OpenID Connect{{ else }}OAuth 2.0{{ end }}</span></span>
+        <svg class="trail chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg>
+        <svg class="trail spinner" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M8 1.75A6.25 6.25 0 1 1 1.75 8"/></svg>
+      </a></li>
+      {{ end }}
+    </ul>
+    <p class="note">Not sure which one? Use the provider you sign in to email with.</p>
+    <p class="sr" aria-live="polite" id="status"></p>
+  </section>
+
+<script>
+  // The rows are plain links; this only shows that the redirect is on its way.
+  const list = document.getElementById('providers');
+  list.addEventListener('click', (e) => {
+    const row = e.target.closest('.provider');
+    if (!row) return;
+    if (list.classList.contains('is-busy')) { e.preventDefault(); return; }
+    list.classList.add('is-busy');
+    row.setAttribute('aria-busy', 'true');
+    row.querySelector('.proto').textContent = 'Redirecting…';
+    document.getElementById('status').textContent = `Redirecting to ${row.dataset.name}`;
+  });
+  // Coming back with the browser's back button restores the page from cache.
+  window.addEventListener('pageshow', (e) => { if (e.persisted) location.reload(); });
+</script>
+
+{{ template "footer.html" . }}
