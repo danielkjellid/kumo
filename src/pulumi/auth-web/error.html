@@ -1,0 +1,61 @@
+<!doctype html>
+<!-- oauth2-proxy's error page, styled like the Dex pages. A 403 here means the
+     account is on no app's list; Caddy's own page covers a single app. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ if eq .StatusCode 403 }}No access{{ else }}{{ .Title }}{{ end }} · kumo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/dex/theme/styles.css" rel="stylesheet">
+<link rel="icon" href="/dex/theme/logo.svg">
+</head>
+<body>
+<main class="shell">
+  <div class="wordmark"><img src="/dex/theme/logo.svg" alt="" width="24" height="24">kumo</div>
+
+  <section class="head">
+    <span class="badge">
+      {{ if eq .StatusCode 403 }}<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2.5" y="5.5" width="7" height="5" rx="1"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5"/></svg>{{ end }}
+      {{ .StatusCode }} {{ .Title }}
+    </span>
+    {{ if eq .StatusCode 403 }}
+    <h1>You don’t have access to kumo</h1>
+    <p class="sub">You signed in, but this account isn’t on the list for any app here. Ask the person who runs it to add you, or sign in with another account.</p>
+    {{ else }}
+    <h1>Sign-in didn’t work</h1>
+    <p class="sub">Something went wrong while signing you in. Try again, and if it keeps happening, send the details below to the person who runs it.</p>
+    {{ end }}
+  </section>
+
+  <section aria-label="Details">
+    <dl class="details">
+      <div><dt>Status</dt><dd>{{ .StatusCode }} {{ .Title }}</dd></div>
+      {{ if .Message }}<div><dt>Reason</dt><dd>{{ .Message }}</dd></div>{{ end }}
+      {{ if .RequestID }}<div><dt>Request</dt><dd>{{ .RequestID }}</dd></div>{{ end }}
+    </dl>
+    {{ if .Redirect }}
+    <div class="actions">
+      <form method="GET" action="{{ .ProxyPrefix }}/sign_in">
+        <input type="hidden" name="rd" id="rd" value="{{ .Redirect }}">
+        <button class="btn btn-primary" type="submit">{{ if eq .StatusCode 403 }}Sign in with a different account{{ else }}Try again{{ end }}</button>
+      </form>
+    </div>
+    <script>
+      // On the callback, oauth2-proxy passes "/" here; the app the person was
+      // opening is in state, after the first colon.
+      const state = new URLSearchParams(location.search).get('state') || '';
+      const rd = document.getElementById('rd');
+      if (rd.value === '/' && state.includes(':')) rd.value = state.slice(state.indexOf(':') + 1);
+    </script>
+    {{ end }}
+  </section>
+
+  <footer class="foot">
+    <span>{{ .Footer }}</span>
+    <span>Secured by Dex</span>
+  </footer>
+</main>
+</body>
+</html>

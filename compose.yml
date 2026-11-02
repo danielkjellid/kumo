@@ -73,10 +73,14 @@ services:
       # email domains next to it: oauth2-proxy lets in anyone matching either,
       # and "*" matches everyone.
       OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE: /etc/oauth2-proxy/allowed-emails
+      # Its error page, styled like the Dex pages (src/pulumi/auth-web).
+      OAUTH2_PROXY_CUSTOM_TEMPLATES_DIR: /etc/oauth2-proxy/templates
+      OAUTH2_PROXY_FOOTER: auth.${DOMAIN}
       # Caddy copies the signed-in email from the auth reply to the app.
       OAUTH2_PROXY_SET_XAUTHREQUEST: "true"
     volumes:
       - ./allowed-emails:/etc/oauth2-proxy/allowed-emails:ro
+      - ./auth-web:/etc/oauth2-proxy/templates:ro
 
   restore:
     <<: *litestream

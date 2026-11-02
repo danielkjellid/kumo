@@ -1,6 +1,8 @@
 import pulumi
 
-from box import write_file
+from pathlib import Path
+
+from box import if_running, write_file
 from settings import config
 
 # Who may open which app. Signing in at all takes a place on at least one list;
@@ -15,4 +17,14 @@ write_file(
     "/srv/infra/allowed-emails",
     access.apply(lambda lists: "".join(f"{email}\n" for email in sorted({e for emails in lists.values() for e in emails}))),
     private=False,
+)
+
+# oauth2-proxy's error page, shown to accounts on no list at all. It reads
+# templates at start, so a change restarts it.
+write_file(
+    "auth-error-page",
+    "/srv/infra/auth-web/error.html",
+    (Path(__file__).parent / "auth-web" / "error.html").read_text(),
+    private=False,
+    then=if_running("auth", "restart auth"),
 )

@@ -72,6 +72,7 @@ h1 { text-wrap: balance; font: 600 24px/1.25 var(--font-display); letter-spacing
 .details dt { color: var(--muted); font-size: 13px; }
 .details dd { margin: 0; font: 400 12px/1.6 var(--font-mono); overflow-wrap: anywhere; padding-top: 1px; }
 .actions { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
+.actions form { display: flex; flex-direction: column; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   height: 40px; padding: 0 16px; border-radius: 8px; border: 1px solid transparent;
