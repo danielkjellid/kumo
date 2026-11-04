@@ -3,7 +3,7 @@ from urllib.parse import quote
 
 from access import access
 from box import if_running, write_file
-from cli.apps import APPS
+from cli.apps import APPS, PUBLIC
 
 # The sign-in snippet and the auth site. site() adds one block per app below.
 BASE = """\
@@ -44,7 +44,17 @@ def site(app: str, allowed: list[str]) -> str:
     # oauth2-proxy reads an empty list as "anyone signed in", so an app nobody
     # was given gets a list that matches no one.
     emails = ",".join(quote(email, safe="@") for email in allowed) or "nobody"
-    return f"\n{app}.{{$DOMAIN}} {{\n\timport login {emails}\n\treverse_proxy {app}:8000\n}}\n"
+    public = PUBLIC.get(app)
+    if not public:
+        return f"\n{app}.{{$DOMAIN}} {{\n\timport login {emails}\n\treverse_proxy {app}:8000\n}}\n"
+    # Without forward_auth nothing strips a client's own X-Auth-Request-Email.
+    return (
+        f"\n{app}.{{$DOMAIN}} {{\n"
+        f"\t@public path {' '.join(public)}\n"
+        f"\thandle @public {{\n\t\trequest_header -X-Auth-Request-Email\n\t\treverse_proxy {app}:8000\n\t}}\n"
+        f"\thandle {{\n\t\timport login {emails}\n\t\treverse_proxy {app}:8000\n\t}}\n"
+        "}\n"
+    )
 
 
 write_file(

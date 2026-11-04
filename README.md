@@ -89,7 +89,10 @@ which only Caddy can set, so the app may trust it. Then, here:
    point its database at `/data/sqlite/<name>.db`.
 2. The same path in `litestream.yml`, and the name in the `restore` loop.
 3. The name in `src/cli/apps.py`. Pulumi then adds its site to the
-   `Caddyfile`, behind the sign-in.
+   `Caddyfile`, behind the sign-in. Paths that must work without it, such
+   as calendar feeds or links in emails, go in `PUBLIC` in the same file,
+   like gatekeeper's `/external/*`. Requests there carry no
+   `X-Auth-Request-Email`, so the app checks its own token.
 4. `kumo env set <name> SECRET_KEY`, `kumo provision add <name> <email>` and
    `kumo commit`.
 
