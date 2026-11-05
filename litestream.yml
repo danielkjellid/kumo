@@ -13,3 +13,12 @@ dbs:
       endpoint: ${LITESTREAM_ENDPOINT}
       region: ${LITESTREAM_REGION}
       force-path-style: true
+
+  - path: /data/sqlite/gatekeeper.db
+    replica:
+      type: s3
+      bucket: ${LITESTREAM_BUCKET}
+      path: gatekeeper
+      endpoint: ${LITESTREAM_ENDPOINT}
+      region: ${LITESTREAM_REGION}
+      force-path-style: true

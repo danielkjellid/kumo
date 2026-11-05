@@ -23,6 +23,16 @@ config:
       SECRET_KEY:
         secure: AAABAMkt9qPljwt/btKysVR4b5Px84kiOLtchIsCIMysFTv/FME+s0rcAojEoHPhYhi6JLl9/DNrrKHG/GdM9tEJtiMoQB3snqOzsOIcoIh9OA==
       DEBUG: 0
+      EMAIL_HOST: smtp.gmail.com
+      EMAIL_HOST_USER:
+        secure: AAABAJFI39Qr1sm103Y0xVOQrj965O7sPvrwG4leom6HLMyqNpcOG5UmRirUKNLtlunqeOrEDz0=
+      EMAIL_HOST_PASSWORD:
+        secure: AAABAHILQbgX4E4QuAM/m+rQucOrvczGTYtrKbG4nrKuEwYguDi45EpdXvq3J4kTP2H3
+      MESSAGE_ID_DOMAIN: gatekeeper.kjellid.no
+      SKISTAR_EMAIL:
+        secure: AAABAAHu3KS1fJtva+FBCMiWxcESIK+YyoQ7LFABG9nac/cEJg5XiigLPRE=
+      SKISTAR_PASSWORD:
+        secure: AAABAMDrMOFux9+vETHq8EMGVkbdcpOg1XYl6tPsCxjqhnyk2OiyxVo=
     auth:
       GOOGLE_CLIENT_ID: 623346269284-qkfspjnrdtsfmpm31kk1tkquqjrt8phg.apps.googleusercontent.com
       GOOGLE_CLIENT_SECRET:
