@@ -118,6 +118,7 @@ services:
       DATABASE_PATH: /data/sqlite/gatekeeper.db
       ALLOWED_HOSTS: gatekeeper.${DOMAIN}
       CSRF_TRUSTED_ORIGINS: https://gatekeeper.${DOMAIN}
+      BASE_URL: https://gatekeeper.${DOMAIN}
 
 volumes:
   caddy_data:
