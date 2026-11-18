@@ -114,11 +114,19 @@ services:
     <<: *app
     image: ghcr.io/danielkjellid/gatekeeper:latest
     env_file: env/gatekeeper.env
-    environment:
+    environment: &gatekeeper-env
       DATABASE_PATH: /data/sqlite/gatekeeper.db
       ALLOWED_HOSTS: gatekeeper.${DOMAIN}
       CSRF_TRUSTED_ORIGINS: https://gatekeeper.${DOMAIN}
       BASE_URL: https://gatekeeper.${DOMAIN}
+
+  # The same image, running the scheduled sync instead of the web server.
+  gatekeeper-cron:
+    <<: *app
+    image: ghcr.io/danielkjellid/gatekeeper:latest
+    env_file: env/gatekeeper.env
+    environment: *gatekeeper-env
+    command: sh -c 'while :; do python manage.py sync_bookings; sleep 900; done'
 
 volumes:
   caddy_data:
